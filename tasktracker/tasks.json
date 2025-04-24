@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "id": 0,
+        "description": "Test task",
+        "status": "todo",
+        "createdAt": "20:34:53.318930",
+        "updatedAt": "20:34:53.318930"
+    },
+    {
+        "id": 1,
+        "description": "Second test",
+        "status": "todo",
+        "createdAt": "20:35:25.985679",
+        "updatedAt": "20:35:25.985679"
+    }
+]

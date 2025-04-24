@@ -1,12 +1,17 @@
 import os
 import json
 import argparse
+from datetime import datetime
 
 filename = 'tasks.json'
 foldername = '~/Documents/Projects/beginner-pyproj/tasktracker'
 
 folderpath = os.path.expanduser(foldername)
 filepath = os.path.join(folderpath, filename)
+
+TO_DO_INDEX = 0
+IN_PROGRESS_INDEX = 1
+DONE_INDEX = 2
 
 def createFile():
     
@@ -17,9 +22,23 @@ def createFile():
             y = json.load(taskfile)
         print(y)
             
-    else:   
+    else:
+        json_data = []
+        # to_do_dict = {
+        #     'To Do': None
+        # }
+        # in_prog_dict = {
+        #     'In Progress': None
+        # }
+        # done_dict = {
+        #     'Done': None
+        # }
+        # json_data.append(to_do_dict)
+        # json_data.append(in_prog_dict)
+        # json_data.append(done_dict)
+           
         with open(filepath, 'w') as taskfile:
-            json.dump([], taskfile, indent=4) 
+            json.dump(json_data, taskfile, indent=4) 
         print(f'File created at {filepath}')
 
 def processRequest():
@@ -51,7 +70,8 @@ def processRequest():
     
     match args.command:
         case 'add':
-            print('add')
+            print(args.task)
+            addTask(args.task)
         case 'update':
             print('update')
         case 'delete' | 'mark-in-progress' | 'mark-done':
@@ -59,9 +79,26 @@ def processRequest():
         case 'list':
             print('list')
 
-def addTask(taskname, status):
+def addTask(taskname):
+    
+    with open(filepath, 'r') as taskfile:
+        data = json.load(taskfile)
+    
+    creation_time = str(datetime.now().time())
+    
+    print(data)
+    data.append({
+        'id':len(data),
+        'description': taskname,
+        'status': 'todo',
+        'createdAt': creation_time,
+        'updatedAt': creation_time
+    })
+    
+    print(data)
+    
     with open(filepath, 'w') as taskfile:
-        json.dump('[]', taskfile, indent=4)
+        json.dump(data, taskfile, indent=4)
     
 
 
