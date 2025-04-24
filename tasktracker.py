@@ -73,7 +73,9 @@ def processRequest():
             print(args.task)
             addTask(args.task)
         case 'update':
-            print('update')
+            print(args.id)
+            print(args.task)
+            updateTask(args.id, args.task)
         case 'delete' | 'mark-in-progress' | 'mark-done':
             print('delete, mark in progress, mark done')
         case 'list':
@@ -84,15 +86,15 @@ def addTask(taskname):
     with open(filepath, 'r') as taskfile:
         data = json.load(taskfile)
     
-    creation_time = str(datetime.now().time())
+    creationTime = str(datetime.now().time())
     
     print(data)
     data.append({
         'id':len(data),
         'description': taskname,
         'status': 'todo',
-        'createdAt': creation_time,
-        'updatedAt': creation_time
+        'createdAt': creationTime,
+        'updatedAt': creationTime
     })
     
     print(data)
@@ -100,8 +102,24 @@ def addTask(taskname):
     with open(filepath, 'w') as taskfile:
         json.dump(data, taskfile, indent=4)
     
-
-
+def updateTask(id, taskname):
+    print('In update task!')
+    with open(filepath, 'r') as taskfile:
+        data = json.load(taskfile)
+    
+    for dicts in data:
+        print(dicts)
+        print(dicts['id'])
+        if dicts['id'] == int(id):
+            print('Found you bitch')
+            updateTime = str(datetime.now().time())
+            dicts['description'] = taskname
+            dicts['updatedAt'] = updateTime
+            
+            print(dicts)
+    
+    with open(filepath, 'w') as taskfile:
+        json.dump(data, taskfile, indent=4)
 
 if __name__ == '__main__':
     createFile()
