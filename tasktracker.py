@@ -24,19 +24,7 @@ def createFile():
             
     else:
         json_data = []
-        # to_do_dict = {
-        #     'To Do': None
-        # }
-        # in_prog_dict = {
-        #     'In Progress': None
-        # }
-        # done_dict = {
-        #     'Done': None
-        # }
-        # json_data.append(to_do_dict)
-        # json_data.append(in_prog_dict)
-        # json_data.append(done_dict)
-           
+        
         with open(filepath, 'w') as taskfile:
             json.dump(json_data, taskfile, indent=4) 
         print(f'File created at {filepath}')
@@ -89,8 +77,22 @@ def addTask(taskname):
     creationTime = str(datetime.now().time())
     
     print(data)
+    
+    idList = []
+    for i in range(len(data)):
+        idList.append(data[i]["id"])
+    
+    idList.sort()
+    lastId = idList[-1]
+    newId = lastId + 1
+
+    for i in range(len(idList)):
+        if i != idList[i]:
+            newId = i
+            break
+        
     data.append({
-        'id':len(data),
+        'id': newId,
         'description': taskname,
         'status': 'todo',
         'createdAt': creationTime,
@@ -101,6 +103,8 @@ def addTask(taskname):
     
     with open(filepath, 'w') as taskfile:
         json.dump(data, taskfile, indent=4)
+        
+    print(f'Task added successfully: (ID: {newId})')
     
 def updateTask(id, taskname):
     print('In update task!')
