@@ -7,13 +7,6 @@
         "updatedAt": "20:53:21.520623"
     },
     {
-        "id": 1,
-        "description": "Buy groceries",
-        "status": "todo",
-        "createdAt": "08:41:58.519618",
-        "updatedAt": "08:41:58.519618"
-    },
-    {
         "id": 3,
         "description": "Buy groceries",
         "status": "todo",
