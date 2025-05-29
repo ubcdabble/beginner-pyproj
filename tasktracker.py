@@ -47,7 +47,7 @@ def processRequest():
     mark_in_progress.add_argument('id', help="ID number")
     
     mark_done = sub_parser.add_parser('mark-done')
-    mark_done.add_argument('identifier', help="Identifier (ID number or task name)")
+    mark_done.add_argument('id', help="ID number")
     
     list_tasks = sub_parser.add_parser('list')
     list_tasks.add_argument('status', help="List type to view: done, todo, in-progress")
@@ -67,9 +67,9 @@ def processRequest():
         case 'delete':
             deleteTask(args.id)
         case 'mark-in-progress':
-            inProgressTask(args.id)
+            markTask(args.id, 'in-progress')
         case 'mark-done':
-            print('mark-done')
+            markTask(args.id, 'done')
         case 'list':
             print('list')
 
@@ -141,13 +141,13 @@ def deleteTask(id):
     with open(filepath, 'w') as taskfile:
         json.dump(data, taskfile, indent=4)
         
-def inProgressTask(id):
+def markTask(id, status):
     with open(filepath, 'r') as taskfile:
         data = json.load(taskfile)
     
     for dicts in data:
         if dicts['id'] == int(id):
-            dicts['status'] = 'in-progress'
+            dicts['status'] = status
     
     with open(filepath, 'w') as taskfile:
         data = json.dump(taskfile)
