@@ -44,7 +44,7 @@ def processRequest():
     delete_task.add_argument('id', help="ID number")
     
     mark_in_progress = sub_parser.add_parser('mark-in-progress')
-    mark_in_progress.add_argument('identifier', help="Identifier (ID number or task name)")
+    mark_in_progress.add_argument('id', help="ID number")
     
     mark_done = sub_parser.add_parser('mark-done')
     mark_done.add_argument('identifier', help="Identifier (ID number or task name)")
@@ -64,10 +64,10 @@ def processRequest():
             print(args.id)
             print(args.task)
             updateTask(args.id, args.task)
-        case 'delete' | 'mark-in-progress' | 'mark-done':
+        case 'delete':
             deleteTask(args.id)
         case 'mark-in-progress':
-            print('mark-in-progress')
+            inProgressTask(args.id)
         case 'mark-done':
             print('mark-done')
         case 'list':
@@ -140,6 +140,17 @@ def deleteTask(id):
     
     with open(filepath, 'w') as taskfile:
         json.dump(data, taskfile, indent=4)
+        
+def inProgressTask(id):
+    with open(filepath, 'r') as taskfile:
+        data = json.load(taskfile)
+    
+    for dicts in data:
+        if dicts['id'] == int(id):
+            dicts['status'] = 'in-progress'
+    
+    with open(filepath, 'w') as taskfile:
+        data = json.dump(taskfile)
 
 if __name__ == '__main__':
     createFile()
