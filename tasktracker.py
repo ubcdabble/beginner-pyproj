@@ -50,7 +50,7 @@ def processRequest():
     mark_done.add_argument('id', help="ID number")
     
     list_tasks = sub_parser.add_parser('list')
-    list_tasks.add_argument('status', help="List type to view: done, todo, in-progress")
+    list_tasks.add_argument('status', nargs='?', help="List type to view: done, todo, in-progress")
     
     args = parser.parse_args()
     
@@ -71,7 +71,7 @@ def processRequest():
         case 'mark-done':
             markTask(args.id, 'done')
         case 'list':
-            print('list')
+            listTask(args.status)
 
 def addTask(taskname):
     
@@ -150,7 +150,31 @@ def markTask(id, status):
             dicts['status'] = status
     
     with open(filepath, 'w') as taskfile:
-        data = json.dump(taskfile)
+        json.dump(data, taskfile, indent=4)
+
+def listTask(status):
+    print('inside list task')
+    
+    with open(filepath, 'r') as taskfile:
+        data = json.load(taskfile)
+    
+    match status:
+        case 'done':
+            for dict in data:
+                if dict['status'] == 'done':
+                    print(dict)
+        case 'todo':
+            for dict in data:
+                if dict['status'] == 'todo':
+                    print(dict)
+        case 'in-progress':
+            for dict in data:
+                if dict['status'] == 'in-progress':
+                    print(dict)
+        case _:
+            for dict in data:
+                print(dict)
+    
 
 if __name__ == '__main__':
     createFile()
