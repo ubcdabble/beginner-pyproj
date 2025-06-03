@@ -9,10 +9,6 @@ foldername = '~/Documents/Projects/beginner-pyproj/tasktracker'
 folderpath = os.path.expanduser(foldername)     # expanduser expands path that contains ~ to be home directory 
 filepath = os.path.join(folderpath, filename)
 
-TO_DO_INDEX = 0
-IN_PROGRESS_INDEX = 1
-DONE_INDEX = 2
-
 def createFile():
     
     os.makedirs(folderpath, exist_ok=True)
