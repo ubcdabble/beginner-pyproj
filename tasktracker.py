@@ -105,10 +105,7 @@ def updateTask(id, taskname):
         data = json.load(taskfile)
     
     for dicts in data:
-        print(dicts)
-        print(dicts['id'])
         if dicts['id'] == int(id):
-            print('Found you bitch')
             updateTime = str(datetime.now().time())
             dicts['description'] = taskname
             dicts['updatedAt'] = updateTime
@@ -130,6 +127,7 @@ def deleteTask(id):
     try:
         with open(filepath, 'w') as taskfile:
             json.dump(data, taskfile, indent=4)
+            print('Task succesfully deleted')
     
     except Exception:
         print('An error occured - task was not deleted')
