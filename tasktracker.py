@@ -6,7 +6,7 @@ from datetime import datetime
 filename = 'tasks.json'
 foldername = '~/Documents/Projects/beginner-pyproj/tasktracker'
 
-folderpath = os.path.expanduser(foldername)
+folderpath = os.path.expanduser(foldername)     # expanduser expands path that contains ~ to be home directory 
 filepath = os.path.join(folderpath, filename)
 
 TO_DO_INDEX = 0
@@ -18,9 +18,7 @@ def createFile():
     os.makedirs(folderpath, exist_ok=True)
 
     if os.path.exists(filepath):
-        with open(filepath, 'r') as taskfile:
-            y = json.load(taskfile)
-        print(y)
+        print(f'File found at {filepath}')
             
     else:
         json_data = []
@@ -54,15 +52,10 @@ def processRequest():
     
     args = parser.parse_args()
     
-    print(f'You want to {args.command}')
-    
     match args.command:
         case 'add':
-            print(args.task)
             addTask(args.task)
         case 'update':
-            print(args.id)
-            print(args.task)
             updateTask(args.id, args.task)
         case 'delete':
             deleteTask(args.id)
@@ -79,8 +72,6 @@ def addTask(taskname):
         data = json.load(taskfile)
     
     creationTime = str(datetime.now().time())
-    
-    print(data)
     
     idList = []
     for i in range(len(data)):
@@ -103,15 +94,17 @@ def addTask(taskname):
         'updatedAt': creationTime
     })
     
-    print(data)
+    try:
+        with open(filepath, 'w') as taskfile:
+            json.dump(data, taskfile, indent=4)
+            
+        print(f'Task added successfully: (ID: {newId})')
     
-    with open(filepath, 'w') as taskfile:
-        json.dump(data, taskfile, indent=4)
-        
-    print(f'Task added successfully: (ID: {newId})')
+    except Exception:
+        print('An error occured - task was not added')
     
 def updateTask(id, taskname):
-    print('In update task!')
+
     with open(filepath, 'r') as taskfile:
         data = json.load(taskfile)
     
@@ -123,23 +116,27 @@ def updateTask(id, taskname):
             updateTime = str(datetime.now().time())
             dicts['description'] = taskname
             dicts['updatedAt'] = updateTime
-            
-            print(dicts)
-    
-    with open(filepath, 'w') as taskfile:
-        json.dump(data, taskfile, indent=4)
+
+    try:
+        with open(filepath, 'w') as taskfile:
+            json.dump(data, taskfile, indent=4)
+        print('Task updated successfully')
+        
+    except Exception:
+        print('An error occured - task was not updated')
 
 def deleteTask(id):
     with open(filepath, 'r') as taskfile:
         data = json.load(taskfile)
-    print(data)
     
     data =  [dicts for dicts in data if dicts['id'] != int(id)]
     
-    print(data)
+    try:
+        with open(filepath, 'w') as taskfile:
+            json.dump(data, taskfile, indent=4)
     
-    with open(filepath, 'w') as taskfile:
-        json.dump(data, taskfile, indent=4)
+    except Exception:
+        print('An error occured - task was not deleted')
         
 def markTask(id, status):
     with open(filepath, 'r') as taskfile:
@@ -149,11 +146,14 @@ def markTask(id, status):
         if dicts['id'] == int(id):
             dicts['status'] = status
     
-    with open(filepath, 'w') as taskfile:
-        json.dump(data, taskfile, indent=4)
+    try:
+        with open(filepath, 'w') as taskfile:
+            json.dump(data, taskfile, indent=4)
+    
+    except Exception:
+        print('An error occured - task was not marked')
 
 def listTask(status):
-    print('inside list task')
     
     with open(filepath, 'r') as taskfile:
         data = json.load(taskfile)
