@@ -6,7 +6,8 @@ def getUserName(githubUrl):
     with urllib.request.urlopen(githubUrl) as f:
         data = json.load(f)
     
-    processEvents(data)
+    print(data)
+    # processEvents(data)
     
     
 def processUserName():
@@ -20,11 +21,25 @@ def processUserName():
     return githubUrl
 
 def processEvents(data):
+    
+    print(data)
+    
+    repos = {}
+    repoEvents = {}
+    
     for event in data:
-        eventType = event['type']
-        eventRepo = event['type']['repo']['name']
+        print(event)
         
-        
+        # eventType = event['type']
+        # eventRepo = event['repo']['name']
+    
+        # if eventRepo in repos:
+        #     # Check the actions
+        #     if repos[eventRepo][]
+                
+        # else:
+        #     repos[eventRepo] = {{}}
+        #     repos[eventRepo][f'Type: {eventType}'] = 1
 
 if __name__ == '__main__':
     userName = processUserName()
