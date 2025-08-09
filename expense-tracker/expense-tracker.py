@@ -33,7 +33,7 @@ def processExpense():
         case 'add' | 'Add':
             addExpense(args.description, args.expense_type, args.amount)
         case 'list' | 'List':
-            print('list')
+            listExpense()
         case 'summary' | 'Summary':
             print('summary')
         case 'delete' | 'Delete':
@@ -75,7 +75,15 @@ def addExpense(description,type,amount):
 
     writeCSV(fileCSV)
 
+def listExpense():
     
+    data = readCSV()
+    
+    for row in data:
+        
+        # ID    Date    Description     Type    Amount
+        print("# {:<3} {:<12} {:<15} {:<10} {:<10}".format(row[0], row[1], row[2].capitalize(), row[3].capitalize(), row[4]))    
+
 
 if __name__ == '__main__':
     processExpense()
