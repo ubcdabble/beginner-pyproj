@@ -2,7 +2,7 @@
 import argparse
 import csv
 import os
-from datetime import date
+from datetime import date, datetime
 
 filename = 'expenses.csv'
 
@@ -35,9 +35,9 @@ def processExpense():
         case 'list' | 'List':
             listExpense()
         case 'summary' | 'Summary':
-            print('summary')
+            summaryExpense(args.month)
         case 'delete' | 'Delete':
-            print('delete')
+            deleteExpense(args.id)
         case _:
             print(f'Error: {args.command} is an unknown command. Please try again.')
 
@@ -63,17 +63,17 @@ def writeCSV(newFile):
 
 def addExpense(description,type,amount):
         
-    fileCSV = readCSV()
+    data = readCSV()
         
-    for row in fileCSV:
+    for row in data:
         if row[0] == 'ID':
             ID = 1
         else:
             ID = int(row[0]) + 1
             
-    fileCSV.append([ID, currentDate, description, type, amount])
+    data.append([ID, currentDate, description, type, amount])
 
-    writeCSV(fileCSV)
+    writeCSV(data)
 
 def listExpense():
     
@@ -82,8 +82,67 @@ def listExpense():
     for row in data:
         
         # ID    Date    Description     Type    Amount
+        # row[0] row[1] row[2]          row[3]  row[4]
         print("# {:<3} {:<12} {:<15} {:<10} {:<10}".format(row[0], row[1], row[2].capitalize(), row[3].capitalize(), row[4]))    
 
+def summaryExpense(month):
+    
+    numDays = {
+        '1': 31,
+        '2': 28,
+        '3': 31,
+        '4': 30,
+        '5': 31,
+        '6': 30,
+        '7': 31,
+        '8': 31,
+        '9': 30,
+        '10': 31,
+        '11': 30,
+        '12': 31
+    }
+    
+    data = readCSV()
+    
+    sum = 0
+    count = 0
+    
+    if month is None:
+        for row in data:
+            if row[0] != 'ID':
+                sum += float(row[4])
+                count += 1
+        
+        average = sum / count
+    
+    else:
+        for row in data:
+            dateStr = row[1]
+            dateObj = datetime.strptime(dateStr, "%Y-%m-%d")
+            
+            if str(dateObj.month) == month:
+                sum += float(row[4])
+                count += 1
+        
+        average = sum/count
+            
+    print(average)
+
+def deleteExpense(id):
+
+    data = readCSV
+    
+    newID = 1
+    
+    data = [row for row in data if row[0] != str(id)]
+    for row in data:
+        if row[0] != 'ID':
+            row[0] = newID
+            newID += 1
+    
+    print(f'The expense sheet has been updated. ID {id} has been deleted.')        
+    print(data)
+    writeCSV(data)
 
 if __name__ == '__main__':
     processExpense()
