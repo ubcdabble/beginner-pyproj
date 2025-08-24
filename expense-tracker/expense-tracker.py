@@ -21,11 +21,7 @@ def processExpense():
     parser.add_argument('-m','--month', help='Filter results to a month')
     parser.add_argument('--id', help='ID of the expense to select')
     
-    
     args = parser.parse_args()
-
-    print(args)
-    print(args.command)
     
     newCSV()
     
@@ -72,8 +68,8 @@ def addExpense(description,type,amount):
             ID = int(row[0]) + 1
             
     data.append([ID, currentDate, description, type, amount])
-
     writeCSV(data)
+    print(f'Expense added successfully (ID: {ID})')
 
 def listExpense():
     
@@ -105,32 +101,28 @@ def summaryExpense(month):
     data = readCSV()
     
     sum = 0
-    count = 0
     
     if month is None:
         for row in data:
             if row[0] != 'ID':
                 sum += float(row[4])
-                count += 1
         
-        average = sum / count
+        print(f'The total amount spent on this expense sheet is {sum}')
     
     else:
         for row in data:
-            dateStr = row[1]
-            dateObj = datetime.strptime(dateStr, "%Y-%m-%d")
-            
-            if str(dateObj.month) == month:
-                sum += float(row[4])
-                count += 1
+            if row[0] != 'ID':
+                dateStr = row[1]
+                dateObj = datetime.strptime(dateStr, "%Y-%m-%d")
+                
+                if str(dateObj.month) == month:
+                    sum += float(row[4])
         
-        average = sum/count
+        print(f'The average spent this month is {sum}')
             
-    print(average)
-
 def deleteExpense(id):
 
-    data = readCSV
+    data = readCSV()
     
     newID = 1
     
@@ -141,7 +133,10 @@ def deleteExpense(id):
             newID += 1
     
     print(f'The expense sheet has been updated. ID {id} has been deleted.')        
-    print(data)
+    for row in data:
+        # ID    Date    Description     Type    Amount
+        # row[0] row[1] row[2]          row[3]  row[4]
+        print("# {:<3} {:<12} {:<15} {:<10} {:<10}".format(row[0], row[1], row[2].capitalize(), row[3].capitalize(), row[4]))
     writeCSV(data)
 
 if __name__ == '__main__':
